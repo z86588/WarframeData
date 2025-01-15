@@ -1,0 +1,133 @@
+/* 表格容器 */
+.table-container {
+    position: relative;
+    overflow-x: auto;
+}
+
+/* 表格基本样式 */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+    border-collapse: collapse;
+}
+
+/* 表头样式 */
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    white-space: nowrap;
+}
+
+/* 单元格基本样式 */
+.table td, .table th {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+/* 数值列宽度控制 */
+.table th[data-field="health"],
+.table th[data-field="shield"],
+.table th[data-field="armor"],
+.table th[data-field="energy"],
+.table th[data-field="sprint_speed"] {
+    width: 80px;
+    max-width: 80px;
+}
+
+/* 名称列宽度控制 */
+.table th[data-field="name_en"],
+.table th[data-field="name_zh"],
+.table th[data-field="name_alias"] {
+    min-width: 150px;
+    width: 150px;
+}
+
+/* 极性列宽度控制 */
+.table th[data-field="polarities"] {
+    width: 100px;
+    max-width: 100px;
+}
+
+/* 技能列宽度控制 */
+.table th[data-field="abilities_en"],
+.table th[data-field="abilities_zh"] {
+    min-width: 300px;
+    width: 300px;
+}
+
+/* 被动列宽度控制 */
+.table th[data-field="passive_en"],
+.table td[data-field="passive_en"],
+.table th[data-field="passive_zh"],
+.table td[data-field="passive_zh"] {
+    min-width: 100px !important;
+    width: 100px !important;
+    max-width: 100px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* 表格单元格内容控制 */
+.table td {
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* 悬停效果 */
+.table tbody tr:hover {
+    background-color: rgba(0,0,0,.075);
+}
+
+/* 奇偶行样式 */
+.table tbody tr:nth-of-type(odd) {
+    background-color: rgba(0,0,0,.05);
+}
+
+/* 表格内的链接样式 */
+.table a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.table a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* 奇数行样式 */
+.vgt-table tbody tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+/* 偶数行样式 */
+.vgt-table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+/* 悬停效果 */
+.vgt-table tbody tr:hover {
+    background-color: #e9ecef;
+    transition: background-color 0.2s ease;
+}
+
+/* 表格行边框 */
+.vgt-table tbody tr {
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* 单元格样式 */
+.vgt-table td {
+    padding: 12px 8px;
+    vertical-align: middle;
+} 

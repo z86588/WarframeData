@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warframe数据</title>
+    <!-- 引入外部样式 -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- 引入自定义样式 -->
+    <link href="css/base.css" rel="stylesheet">
+    <link href="css/table.css" rel="stylesheet">
+    <link href="css/modal.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app" class="container-fluid page-container mt-4" v-cloak>
+        <h1 class="mb-4">Warframe数据</h1>
+        
+        <!-- 爬虫控制和数据统计 -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <crawler-control 
+                    ref="crawlerControl"
+                    :crawler-status.sync="crawlerStatus"
+                    @crawler-complete="onCrawlerComplete">
+                </crawler-control>
+            </div>
+            <div class="col-md-8">
+                <stats-panel ref="statsPanel"></stats-panel>
+            </div>
+        </div>
+
+        <!-- 错误提示 -->
+        <div v-if="error" class="error-message" v-text="error"></div>
+        
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link" :class="{ active: currentTab === 'warframes' }" 
+                   href="#" @click="setTab('warframes')">Warframes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" :class="{ active: currentTab === 'weapons' }" 
+                   href="#" @click="setTab('weapons')">Weapons</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" :class="{ active: currentTab === 'mods' }" 
+                   href="#" @click="setTab('mods')">Mods</a>
+            </li>
+        </ul>
+
+        <!-- 数据表格 -->
+        <data-table 
+            ref="dataTable"
+            :type="currentTab"
+            :columns="columns[currentTab]"
+            @edit-item="editItem">
+        </data-table>
+
+        <!-- 编辑模态框 -->
+        <edit-modal
+            :item="editingItem"
+            :type="currentTab"
+            :show="!!editingItem"
+            @save="handleSave"
+            @cancel="handleCancel">
+        </edit-modal>
+
+        <!-- 描述浮窗 -->
+        <description-tooltip
+            ref="descriptionTooltip"
+            :active-description.sync="activeDescription">
+        </description-tooltip>
+
+        <div class="text-muted mt-4">
+            数据加载时间: {{ new Date().toLocaleString() }}
+        </div>
+    </div>
+
+    <!-- 使用本地Vue资源 -->
+    <script src="js/vue.min.js"></script>
+    <!-- 引入列配置 -->
+    <script src="js/columns.js"></script>
+    <!-- 引入组件 -->
+    <script src="js/components/DescriptionTooltip.js"></script>
+    <script src="js/components/CrawlerControl.js"></script>
+    <script src="js/components/StatsPanel.js"></script>
+    <script src="js/components/DataTable.js"></script>
+    <script src="js/components/Pagination.js"></script>
+    <script src="js/components/EditModal.js"></script>
+
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                currentTab: 'warframes',
+                editingItem: null,
+                error: null,
+                activeDescription: null,
+                crawlerStatus: {
+                    is_running: false,
+                    current_type: null,
+                    message: '',
+                    last_run: null
+                },
+                columns: {
+                    warframes: warframeColumns,
+                    weapons: weaponColumns,
+                    mods: modColumns
+                }
+            },
+            components: {
+                'crawler-control': CrawlerControl,
+                'stats-panel': StatsPanel,
+                'data-table': DataTable,
+                'pagination': Pagination,
+                'edit-modal': EditModal,
+                'description-tooltip': DescriptionTooltip
+            },
+            mounted() {
+                this.setupDescriptionTooltip();
+            },
+            beforeDestroy() {
+                // 清理事件监听
+                if (this.handleMouseOver) {
+                    document.removeEventListener('mouseover', this.handleMouseOver);
+                }
+                if (this.handleMouseOut) {
+                    document.removeEventListener('mouseout', this.handleMouseOut);
+                }
+            },
+            methods: {
+                setTab(tab) {
+                    this.currentTab = tab;
+                },
+                editItem(item) {
+                    this.editingItem = { ...item };
+                },
+                async handleSave(editData) {
+                    try {
+                        const response = await fetch(`/api/${this.currentTab}/${editData.id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(editData)
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (!response.ok || !result.success) {
+                            const errorMessage = result.error || result.message || `HTTP error! status: ${response.status}`;
+                            throw new Error(errorMessage);
+                        }
+                        
+                        // 保存成功，关闭编辑窗口并刷新数据
+                        this.handleCancel();
+                        const dataTable = this.$refs.dataTable;
+                        if (dataTable) {
+                            const currentPage = dataTable.pagination.page;
+                            await dataTable.fetchData();
+                            if (dataTable.pagination.page !== currentPage) {
+                                await dataTable.changePage(currentPage);
+                            }
+                        }
+                        this.error = null;
+                    } catch (e) {
+                        this.error = e.message;
+                        return false;
+                    }
+                    return true;
+                },
+                handleCancel() {
+                    this.editingItem = null;
+                },
+                onCrawlerComplete() {
+                    if (this.$refs.dataTable) {
+                        this.$refs.dataTable.fetchData();
+                    }
+                    if (this.$refs.statsPanel) {
+                        this.$refs.statsPanel.fetchStats();
+                    }
+                },
+                setupDescriptionTooltip() {
+                    if (!this.$refs.descriptionTooltip) {
+                        return;
+                    }
+                    
+                    // 移除旧的事件监听器
+                    if (this.handleMouseOver) {
+                        document.removeEventListener('mouseover', this.handleMouseOver);
+                    }
+                    if (this.handleMouseOut) {
+                        document.removeEventListener('mouseout', this.handleMouseOut);
+                    }
+                    
+                    this.$refs.descriptionTooltip.$on('register-events', ({ showDescription, hideDescription }) => {
+                        // 创建新的事件处理函数
+                        this.handleMouseOver = (event) => {
+                            const target = event.target;
+                            if (target.classList.contains('info-icon')) {
+                                const type = target.dataset.type;
+                                const id = target.dataset.id;
+                                const index = target.dataset.index;
+                                if (this.$refs.dataTable) {
+                                    const item = this.$refs.dataTable.items.find(item => item.id === id);
+                                    if (item) {
+                                        showDescription(event, item, type);
+                                    }
+                                }
+                            }
+                        };
+                        
+                        this.handleMouseOut = (event) => {
+                            const target = event.target;
+                            if (target.classList.contains('info-icon')) {
+                                hideDescription();
+                            }
+                        };
+                        
+                        // 添加新的事件监听器
+                        document.addEventListener('mouseover', this.handleMouseOver);
+                        document.addEventListener('mouseout', this.handleMouseOut);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

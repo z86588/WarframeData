@@ -1,0 +1,191 @@
+[v-cloak] {
+    display: none;
+}
+
+.page-container {
+    padding: 20px;
+}
+
+.error-message {
+    color: #dc3545;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border: 1px solid #dc3545;
+    border-radius: 0.25rem;
+    background-color: #f8d7da;
+}
+
+/* 浮窗样式 */
+.description-tooltip {
+    position: fixed;
+    z-index: 9999;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 320px;
+    display: none;
+    pointer-events: none;  /* 防止浮窗阻挡鼠标事件 */
+}
+
+.description-tooltip h6 {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.description-tooltip p {
+    margin-bottom: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.description-tooltip.show {
+    display: block;
+}
+
+.info-icon {
+    cursor: pointer;
+    color: #007bff;
+    margin-left: 4px;
+    font-size: 14px;
+}
+
+/* 加载遮罩 */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* 数值单元格样式 */
+.number-cell {
+    font-family: monospace;
+    text-align: right;
+}
+
+/* 极性标签样式 */
+.polarities-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.polarity-tag {
+    background: #e9ecef;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+/* 技能项样式 */
+.ability-item {
+    margin-bottom: 4px;
+    padding: 4px;
+    border-radius: 4px;
+    background: #f8f9fa;
+}
+
+.ability-item:last-child {
+    margin-bottom: 0;
+}
+
+.stats-card {
+    height: 100%;
+    background: white;
+}
+
+.stats-card .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+.stats-card .card-body {
+    padding: 1rem;
+}
+
+.stat-item {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 4px;
+    padding: 12px;
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-footer {
+    margin-top: auto;
+    text-align: right;
+}
+
+.stat-label {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: #0d6efd;
+    font-size: 1.25rem;
+}
+
+.crawler-control .card {
+    background: white;
+}
+
+.crawler-control .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+.crawler-control .status-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.crawler-control .status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6c757d;
+}
+
+.crawler-control .status-item i {
+    width: 16px;
+    text-align: center;
+    color: #0d6efd;
+}
+
+.crawler-control .crawler-actions button {
+    padding: 0.5rem;
+}
+
+.crawler-control .crawler-actions button i {
+    font-size: 1.25rem;
+    margin-bottom: 4px;
+}
+
+.crawler-control .badge {
+    padding: 0.5em 0.75em;
+} 
