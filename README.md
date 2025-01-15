@@ -1,5 +1,10 @@
 # Warframe Wiki 数据管理系统
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Python](https://img.shields.io/badge/python-3.9-blue.svg)
+![Vue.js](https://img.shields.io/badge/vue.js-2.x-green.svg)
+![Bootstrap](https://img.shields.io/badge/bootstrap-5.x-purple.svg)
+
 这是一个用于管理 Warframe 游戏数据的 Web 应用系统。该系统提供了战甲、武器和 Mod 的数据管理功能，支持数据的展示、搜索、编辑和爬取。
 
 ## 功能特性
@@ -99,3 +104,22 @@ python app.py
 - [ ] 优化爬虫性能
 - [ ] 添加数据变更日志
 - [ ] 增加用户权限管理 
+
+## 许可证
+
+本项目采用 MIT 许可证。查看 [LICENSE](LICENSE) 文件了解更多信息。
+
+## 贡献
+
+欢迎提交问题和改进建议！如果您想为项目做出贡献：
+
+1. Fork 本仓库
+2. 创建您的特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交您的更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 打开一个 Pull Request
+
+## 联系方式
+
+项目维护者：z86588
+项目链接：[https://github.com/z86588/WarframeData](https://github.com/z86588/WarframeData) 
